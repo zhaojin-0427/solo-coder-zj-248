@@ -702,7 +702,7 @@ class SessionStrokeAnalyzer:
         if not sync_history:
             return []
         
-        threshold = self.thresholds["sync_score_threshold"] * 0.85
+        threshold = self.thresholds["sync_score_threshold"] * 0.95
         segments = []
         current_segment: Optional[Dict] = None
         

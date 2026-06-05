@@ -1,0 +1,174 @@
+启动服务器...
+服务器已启动
+等待服务器就绪...
+服务器在第 1 次尝试时就绪
+
+============================================================
+  1. 健康检查
+============================================================
+状态码: 200
+服务状态: healthy
+✓ 健康检查通过
+
+============================================================
+  2. 多会话隔离测试
+============================================================
+  创建会话 1: 4cb9e819-dd4c-419d-a99d-114a1c4cd9d5
+  创建会话 2: fd3112bd-3e70-4159-8540-00d08879226f
+  创建会话 3: 6bbfc25a-74ce-4d9f-b1eb-783713e849dc
+  会话列表包含 3 个会话
+  会话 1 数据隔离验证通过，平均力量: 140.2N
+  会话 2 数据隔离验证通过，平均力量: 149.9N
+  会话 3 数据隔离验证通过，平均力量: 162.2N
+✓ 多会话隔离测试通过
+
+============================================================
+  3. 教练策略配置与生效测试
+============================================================
+  创建策略: 250d35aa-5f25-4b56-a5df-1a34d69132ea
+  策略列表查询通过
+  策略更新通过
+  策略 250d35aa-5f25-4b56-a5df-1a34d69132ea 应用到会话 a631e8b0-0c77-43df-bf9e-fa160440dee5
+  检测到异常类型: {'entry_angle_deviation', 'force_imbalance', 'stroke_rate_mismatch'}
+  策略生效：所有预期异常均被检测到
+✓ 教练策略配置与生效测试通过
+
+============================================================
+  4. 训练复盘接口测试
+============================================================
+  创建复盘会话: e82d2fc6-6cc8-4a21-b906-87f8521e840b
+  严格策略已应用到复盘会话
+  Batch 30 response: {"detail":[{"type":"greater_than_equal","loc":["body",3,"pull_force"],"msg":"Input should be greater than or equal to 0","input":-7.908525828212953,"ctx":{"ge":0.0}}]}
+  Batch 40 response: {"detail":[{"type":"greater_than_equal","loc":["body",3,"pull_force"],"msg":"Input should be greater than or equal to 0","input":-11.085466429642024,"ctx":{"ge":0.0}}]}
+  Batch 50 response: {"detail":[{"type":"greater_than_equal","loc":["body",1,"pull_force"],"msg":"Input should be greater than or equal to 0","input":-2.2843026330612037,"ctx":{"ge":0.0}},{"type":"greater_than_equal","loc
+  Batch 80 response: {"detail":[{"type":"greater_than_equal","loc":["body",0,"stroke_rate"],"msg":"Input should be greater than or equal to 0","input":-5.243842571810727,"ctx":{"ge":0.0}},{"type":"greater_than_equal","loc
+  Batch 90 response: {"detail":[{"type":"greater_than_equal","loc":["body",0,"stroke_rate"],"msg":"Input should be greater than or equal to 0","input":-4.961238299451231,"ctx":{"ge":0.0}},{"type":"greater_than_equal","loc
+  Batch 100 response: {"detail":[{"type":"greater_than_equal","loc":["body",0,"stroke_rate"],"msg":"Input should be greater than or equal to 0","input":-5.293991002250229,"ctx":{"ge":0.0}},{"type":"greater_than_equal","loc
+
+✗ 测试失败: HTTPConnectionPool(host='127.0.0.1', port=7897): Max retries exceeded with url: http://localhost:9801/api/session/e82d2fc6-6cc8-4a21-b906-87f8521e840b/batch-telemetry (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/urllib3/connection.py", line 565, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 1378, in getresponse
+    response.begin()
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 287, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+The above exception was the direct cause of the following exception:
+
+urllib3.exceptions.ProxyError: ('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response'))
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/urllib3/util/retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=7897): Max retries exceeded with url: http://localhost:9801/api/session/e82d2fc6-6cc8-4a21-b906-87f8521e840b/batch-telemetry (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 672, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 384, in test_training_review
+    response = requests.post(
+               ^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/api.py", line 134, in post
+    return request("post", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/api.py", line 71, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/adapters.py", line 723, in send
+    raise ProxyError(e, request=request)
+requests.exceptions.ProxyError: HTTPConnectionPool(host='127.0.0.1', port=7897): Max retries exceeded with url: http://localhost:9801/api/session/e82d2fc6-6cc8-4a21-b906-87f8521e840b/batch-telemetry (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))
+停止服务器...
+服务器已停止
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 534, in _make_request
+    response = conn.getresponse()
+               ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/urllib3/connection.py", line 565, in getresponse
+    httplib_response = super().getresponse()
+                       ^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 1378, in getresponse
+    response.begin()
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 318, in begin
+    version, status, reason = self._read_status()
+                              ^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/http/client.py", line 287, in _read_status
+    raise RemoteDisconnected("Remote end closed connection without"
+http.client.RemoteDisconnected: Remote end closed connection without response
+
+The above exception was the direct cause of the following exception:
+
+urllib3.exceptions.ProxyError: ('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response'))
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/adapters.py", line 696, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/urllib3/connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/urllib3/util/retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=7897): Max retries exceeded with url: http://localhost:9801/api/session/e82d2fc6-6cc8-4a21-b906-87f8521e840b/batch-telemetry (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 691, in <module>
+    run_all_tests()
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 672, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 384, in test_training_review
+    response = requests.post(
+               ^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/api.py", line 134, in post
+    return request("post", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/api.py", line 71, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/sessions.py", line 651, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/sessions.py", line 784, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/requests/adapters.py", line 723, in send
+    raise ProxyError(e, request=request)
+requests.exceptions.ProxyError: HTTPConnectionPool(host='127.0.0.1', port=7897): Max retries exceeded with url: http://localhost:9801/api/session/e82d2fc6-6cc8-4a21-b906-87f8521e840b/batch-telemetry (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))

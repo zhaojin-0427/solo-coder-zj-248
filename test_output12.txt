@@ -1,0 +1,69 @@
+启动服务器...
+  已终止进程 5139 占用端口 9801
+  已终止进程 54709 占用端口 9801
+服务器已启动
+等待服务器就绪...
+服务器在第 1 次尝试时就绪
+
+============================================================
+  1. 健康检查
+============================================================
+状态码: 200
+服务状态: healthy
+✓ 健康检查通过
+
+============================================================
+  2. 多会话隔离测试
+============================================================
+  创建会话 1: 37dc57a0-cc54-4f13-a932-ac75ce4309c7
+  创建会话 2: da0658e4-98c6-43f1-8f97-8222d5a5f3b0
+  创建会话 3: 52866e95-99dc-4b64-b160-be54a74f91f7
+  会话列表包含 3 个会话
+  会话 1 数据隔离验证通过，平均力量: 140.4N
+  会话 2 数据隔离验证通过，平均力量: 149.8N
+  会话 3 数据隔离验证通过，平均力量: 159.6N
+✓ 多会话隔离测试通过
+
+============================================================
+  3. 教练策略配置与生效测试
+============================================================
+  创建策略: e6898572-f177-4595-a67c-7b4d494bab65
+  策略列表查询通过
+  策略更新通过
+  策略 e6898572-f177-4595-a67c-7b4d494bab65 应用到会话 9f04646b-c55a-4b16-a47d-16e25c016b9e
+  检测到异常类型: {'entry_angle_deviation', 'stroke_rate_mismatch', 'force_imbalance'}
+  策略生效：所有预期异常均被检测到
+✓ 教练策略配置与生效测试通过
+
+============================================================
+  4. 训练复盘接口测试
+============================================================
+  创建复盘会话: 572a4595-ba8c-4f26-8ffe-0221b3a6cd1c
+  严格策略已应用到复盘会话
+  复盘接口状态码: 200
+  复盘接口响应: {"code":200,"message":"训练复盘报告生成成功","data":{"session_id":"572a4595-ba8c-4f26-8ffe-0221b3a6cd1c","session_name":"复盘测试会话","total_duration_seconds":1.494,"phase_summary":{"warmup":{"avg_sync_rate":0.9838004136855087,"min_sync_rate":0.9787482040444303,"max_sync_rate":0.9878144983218851,"data_points":26,"anomaly_count":62,"duration_seconds":0.153},"endurance":{"avg_sync_rate":0.9851280963686487,"min_sync_rate":0.9785519083702008,"max_sync_rate":0.988885918082048,"data_points":11,"anomaly_count":36,"du
+  分阶段同步率曲线点数: 62
+  异常持续时间统计类型数: 1
+  关键失步片段数: 0
+
+✗ 测试失败: 
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 660, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 409, in test_training_review
+    assert len(review_data['key_desync_segments']) > 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+停止服务器...
+服务器已停止
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 679, in <module>
+    run_all_tests()
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 660, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 409, in test_training_review
+    assert len(review_data['key_desync_segments']) > 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,74 @@
+启动服务器...
+服务器已启动
+等待服务器就绪...
+服务器在第 1 次尝试时就绪
+
+============================================================
+  1. 健康检查
+============================================================
+状态码: 200
+服务状态: healthy
+✓ 健康检查通过
+
+============================================================
+  2. 多会话隔离测试
+============================================================
+  创建会话 1: a75b63ff-c20c-4e49-9702-828de9d969ae
+  创建会话 2: 1df2dcdf-05e5-48ce-94dc-554138cae21e
+  创建会话 3: 8cfbebe5-89a0-496e-abb6-9c9b89dac57c
+  会话列表包含 3 个会话
+  会话 1 数据隔离验证通过，平均力量: 140.9N
+  会话 2 数据隔离验证通过，平均力量: 148.4N
+  会话 3 数据隔离验证通过，平均力量: 160.7N
+✓ 多会话隔离测试通过
+
+============================================================
+  3. 教练策略配置与生效测试
+============================================================
+  创建策略: 811e23e2-054c-4b3c-b8a6-66d8d6987d5b
+  策略列表查询通过
+  策略更新通过
+  策略 811e23e2-054c-4b3c-b8a6-66d8d6987d5b 应用到会话 4eb6712f-bf41-4d50-8b50-97cc13b4be52
+  检测到异常类型: {'force_imbalance', 'stroke_rate_mismatch', 'entry_angle_deviation'}
+  策略生效：所有预期异常均被检测到
+✓ 教练策略配置与生效测试通过
+
+============================================================
+  4. 训练复盘接口测试
+============================================================
+  创建复盘会话: 8b5004f5-26ee-4012-b1de-217000c43761
+  严格策略已应用到复盘会话
+  Batch 30 sync rate: 0.3652
+  Batch 40 sync rate: 0.3636
+  Batch 50 sync rate: 0.3598
+  Batch 80 sync rate: 0.3467
+  Batch 90 sync rate: 0.3476
+  Batch 100 sync rate: 0.3456
+  复盘接口状态码: 200
+  复盘接口响应: {"code":200,"message":"训练复盘报告生成成功","data":{"session_id":"8b5004f5-26ee-4012-b1de-217000c43761","session_name":"复盘测试会话","total_duration_seconds":27.8,"phase_summary":{"intensity":{"avg_sync_rate":0.3628058634468859,"min_sync_rate":0.35776782265590445,"max_sync_rate":0.36673751527732645,"data_points":16,"anomaly_count":0,"duration_seconds":3.0},"endurance":{"avg_sync_rate":0.49150978392979144,"min_sync_rate":0.33440966028832275,"max_sync_rate":0.9892962281568244,"data_points":49,"anomaly_count":0,
+  分阶段同步率曲线点数: 100
+  异常持续时间统计类型数: 4
+  关键失步片段数: 2
+  各桨位技术短板数: 4
+
+✗ 测试失败: 
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 672, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 428, in test_training_review
+    assert 'deficiency_type' in deficiency
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+停止服务器...
+服务器已停止
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 691, in <module>
+    run_all_tests()
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 672, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 428, in test_training_review
+    assert 'deficiency_type' in deficiency
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -1,0 +1,98 @@
+启动服务器...
+服务器已启动
+等待服务器就绪...
+服务器在第 2 次尝试时就绪
+
+============================================================
+  1. 健康检查
+============================================================
+状态码: 200
+服务状态: healthy
+✓ 健康检查通过
+
+============================================================
+  2. 多会话隔离测试
+============================================================
+  创建会话 1: 4609459c-37a2-4945-8661-3806cda27f4a
+  创建会话 2: 8daf2f51-cca4-4847-baed-613f71a20e50
+  创建会话 3: f439d584-ba0b-4fc3-83c8-d38a77f44f63
+  会话列表包含 3 个会话
+  会话 1 数据隔离验证通过，平均力量: 140.9N
+  会话 2 数据隔离验证通过，平均力量: 150.0N
+  会话 3 数据隔离验证通过，平均力量: 158.4N
+✓ 多会话隔离测试通过
+
+============================================================
+  3. 教练策略配置与生效测试
+============================================================
+  创建策略: 604bc8a5-e20b-4c35-b169-dbf5033e2f23
+  策略列表查询通过
+  策略更新通过
+  策略 604bc8a5-e20b-4c35-b169-dbf5033e2f23 应用到会话 42b5a381-2861-477c-a6f9-f39a450f9377
+  检测到异常类型: {'entry_angle_deviation', 'stroke_rate_mismatch', 'force_imbalance'}
+  策略生效：所有预期异常均被检测到
+✓ 教练策略配置与生效测试通过
+
+============================================================
+  4. 训练复盘接口测试
+============================================================
+  创建复盘会话: 0d0a302e-afa1-4d67-8d88-354f06e7c27a
+  严格策略已应用到复盘会话
+  Batch 30 sync rate: 0.3625
+  Batch 40 sync rate: 0.3683
+  Batch 50 sync rate: 0.3630
+  Batch 80 sync rate: 0.3444
+  Batch 90 sync rate: 0.3456
+  Batch 100 sync rate: 0.3448
+  复盘接口状态码: 200
+  复盘接口响应: {"code":200,"message":"训练复盘报告生成成功","data":{"session_id":"0d0a302e-afa1-4d67-8d88-354f06e7c27a","session_name":"复盘测试会话","total_duration_seconds":27.8,"phase_summary":{"intensity":{"avg_sync_rate":0.3634641010235661,"min_sync_rate":0.3574822692942859,"max_sync_rate":0.3685969811214791,"data_points":16,"anomaly_count":0,"duration_seconds":3.0},"endurance":{"avg_sync_rate":0.4915694588006562,"min_sync_rate":0.33644659231934715,"max_sync_rate":0.9917317868327714,"data_points":49,"anomaly_count":0,"du
+  分阶段同步率曲线点数: 100
+  异常持续时间统计类型数: 4
+  关键失步片段数: 2
+  各桨位技术短板数: 4
+  训练负荷峰值区间数: 3
+✓ 训练复盘接口测试通过
+  同步率曲线子接口通过
+  复盘摘要子接口通过
+
+============================================================
+  5. 会话状态流转测试
+============================================================
+  创建状态测试会话: 371385f6-7c5a-4559-b886-87160826ab28
+  初始状态: normal_training
+  状态切换到 posture_warning 成功
+  状态历史记录数: 2
+  状态切换到 technical_adjustment 成功
+  状态切换到 rest_recovery 成功
+  状态切换到 training_ended 成功
+✓ 会话状态流转测试通过
+
+============================================================
+  6. 实时干预建议测试
+============================================================
+  创建干预测试会话: 3cf2e0aa-9d7e-482b-ba2f-40587b92325f
+  连续异常计数: 60
+  建议状态: posture_warning
+  分桨位建议数: 12
+
+✗ 测试失败: 
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 674, in run_all_tests
+    intervention_session_id = test_real_time_intervention()
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 590, in test_real_time_intervention
+    assert 'anomaly_type' in suggestion
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+停止服务器...
+服务器已停止
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 691, in <module>
+    run_all_tests()
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 674, in run_all_tests
+    intervention_session_id = test_real_time_intervention()
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 590, in test_real_time_intervention
+    assert 'anomaly_type' in suggestion
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

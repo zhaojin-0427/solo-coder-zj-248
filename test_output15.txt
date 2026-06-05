@@ -1,0 +1,62 @@
+启动服务器...
+服务器已启动
+等待服务器就绪...
+服务器在第 1 次尝试时就绪
+
+============================================================
+  1. 健康检查
+============================================================
+状态码: 200
+服务状态: healthy
+✓ 健康检查通过
+
+============================================================
+  2. 多会话隔离测试
+============================================================
+  创建会话 1: 5f83cc25-0fda-457c-8945-f961e8896a60
+  创建会话 2: 498dc2f4-e63d-489f-8942-84d51d563026
+  创建会话 3: 90a04476-4d82-48a4-b236-4b96d16860af
+  会话列表包含 3 个会话
+  会话 1 数据隔离验证通过，平均力量: 139.8N
+  会话 2 数据隔离验证通过，平均力量: 149.2N
+  会话 3 数据隔离验证通过，平均力量: 160.5N
+✓ 多会话隔离测试通过
+
+============================================================
+  3. 教练策略配置与生效测试
+============================================================
+  创建策略: b1f8b8ec-2851-4841-b487-494f1abb33d2
+  策略列表查询通过
+  策略更新通过
+  策略 b1f8b8ec-2851-4841-b487-494f1abb33d2 应用到会话 3b3d655f-bb6f-4c1f-bdec-e9ec573e1107
+  检测到异常类型: {'stroke_rate_mismatch', 'force_imbalance', 'entry_angle_deviation'}
+  策略生效：所有预期异常均被检测到
+✓ 教练策略配置与生效测试通过
+
+============================================================
+  4. 训练复盘接口测试
+============================================================
+  创建复盘会话: c79dd3b6-81b6-42d0-890f-333a5a08806f
+  严格策略已应用到复盘会话
+
+✗ 测试失败: 'code'
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 667, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 391, in test_training_review
+    if result['code'] == 200 and result['data'].get('sync_rate'):
+       ~~~~~~^^^^^^^^
+KeyError: 'code'
+停止服务器...
+服务器已停止
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 686, in <module>
+    run_all_tests()
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 667, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 391, in test_training_review
+    if result['code'] == 200 and result['data'].get('sync_rate'):
+       ~~~~~~^^^^^^^^
+KeyError: 'code'

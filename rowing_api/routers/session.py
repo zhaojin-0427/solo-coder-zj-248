@@ -63,15 +63,18 @@ async def get_session(session_id: str):
 
 
 @router.post("/{session_id}/telemetry")
-async def report_session_telemetry(data: SessionTelemetryData):
+async def report_session_telemetry(session_id: str, data: SessionTelemetryData):
     try:
-        store = session_manager.get_session_store_or_none(data.session_id)
-        if not store:
-            return error_response(404, f"会话 {data.session_id} 不存在")
+        if data.session_id != session_id:
+            return error_response(400, f"请求体 session_id ({data.session_id}) 与 URL session_id ({session_id}) 不一致")
         
-        session = session_manager.get_session(data.session_id)
+        store = session_manager.get_session_store_or_none(session_id)
+        if not store:
+            return error_response(404, f"会话 {session_id} 不存在")
+        
+        session = session_manager.get_session(session_id)
         if not session or session.status != SessionStatus.ACTIVE:
-            return error_response(400, f"会话 {data.session_id} 未处于活跃状态")
+            return error_response(400, f"会话 {session_id} 未处于活跃状态")
         
         telemetry_data = TelemetryData(
             device_id=data.device_id,
@@ -86,7 +89,7 @@ async def report_session_telemetry(data: SessionTelemetryData):
         store.add_telemetry(telemetry_data)
         store.trigger_alignment()
         
-        analyzer = SessionStrokeAnalyzer(data.session_id)
+        analyzer = SessionStrokeAnalyzer(session_id)
         sync_rate = analyzer.calculate_sync_rate()
         anomalies = analyzer.detect_anomalies()
         
@@ -98,7 +101,7 @@ async def report_session_telemetry(data: SessionTelemetryData):
         
         response_data = {
             "received": True,
-            "session_id": data.session_id,
+            "session_id": session_id,
             "timestamp": data.timestamp,
             "seat_position": data.seat_position,
             "sync_rate": sync_rate.model_dump() if sync_rate else None,
@@ -112,12 +115,15 @@ async def report_session_telemetry(data: SessionTelemetryData):
 
 
 @router.post("/{session_id}/batch-telemetry")
-async def batch_report_session_telemetry(data_list: List[SessionTelemetryData]):
+async def batch_report_session_telemetry(session_id: str, data_list: List[SessionTelemetryData]):
     try:
         if not data_list:
             return error_response(400, "数据列表不能为空")
         
-        session_id = data_list[0].session_id
+        for idx, data in enumerate(data_list):
+            if data.session_id != session_id:
+                return error_response(400, f"批次中第{idx+1}条数据的 session_id ({data.session_id}) 与 URL session_id ({session_id}) 不一致")
+        
         store = session_manager.get_session_store_or_none(session_id)
         if not store:
             return error_response(404, f"会话 {session_id} 不存在")

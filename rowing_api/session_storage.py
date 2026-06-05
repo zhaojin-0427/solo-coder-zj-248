@@ -39,9 +39,13 @@ class SessionDataStore:
         self._anomaly_start_times: Dict[AnomalyType, int] = {}
         
         self._state_history: List[TrainingStateRecord] = []
-        self._current_state_record: Optional[TrainingStateRecord] = None
         self._current_state: TrainingState = TrainingState.NORMAL_TRAINING
         self._state_start_time: int = int(time.time() * 1000)
+        self._current_state_record = TrainingStateRecord(
+            state=TrainingState.NORMAL_TRAINING,
+            start_time=self._state_start_time
+        )
+        self._state_history.append(self._current_state_record)
         
         self._phase_start_times: Dict[TrainingPhase, int] = {}
         self._current_phase: TrainingPhase = TrainingPhase.WARMUP
@@ -82,7 +86,6 @@ class SessionDataStore:
 
     def trigger_alignment(self) -> None:
         with self._lock:
-            current_time = int(time.time() * 1000)
             min_seats_for_alignment = 2
             seats_with_data = sum(
                 1 for buffer in self._alignment_buffer.values() 
@@ -90,8 +93,14 @@ class SessionDataStore:
             )
             
             if seats_with_data >= min_seats_for_alignment:
-                self._perform_alignment(current_time)
-                self._last_alignment_time = current_time
+                all_timestamps = []
+                for buffer in self._alignment_buffer.values():
+                    for p in buffer:
+                        all_timestamps.append(p.timestamp)
+                
+                if all_timestamps:
+                    target_time = max(all_timestamps)
+                    self._perform_alignment(target_time)
 
     def _perform_alignment(self, target_time: int) -> None:
         window_start = target_time - Config.ALIGNMENT_WINDOW_MS * 5

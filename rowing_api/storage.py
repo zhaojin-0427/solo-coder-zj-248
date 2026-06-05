@@ -48,7 +48,6 @@ class DataStore:
 
     def trigger_alignment(self) -> None:
         with self._lock:
-            current_time = int(time.time() * 1000)
             min_seats_for_alignment = 2
             seats_with_data = sum(
                 1 for buffer in self._alignment_buffer.values() 
@@ -56,8 +55,14 @@ class DataStore:
             )
             
             if seats_with_data >= min_seats_for_alignment:
-                self._perform_alignment(current_time)
-                self._last_alignment_time = current_time
+                all_timestamps = []
+                for buffer in self._alignment_buffer.values():
+                    for p in buffer:
+                        all_timestamps.append(p.timestamp)
+                
+                if all_timestamps:
+                    target_time = max(all_timestamps)
+                    self._perform_alignment(target_time)
 
     def _perform_alignment(self, target_time: int) -> None:
         window_start = target_time - Config.ALIGNMENT_WINDOW_MS * 5

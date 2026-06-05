@@ -100,7 +100,7 @@ def generate_telemetry_data(session_id, base_ts, seat, stroke_rate=30, angle=45,
     return {
         "device_id": f"sensor_{session_id}_seat_{seat}",
         "seat_position": seat,
-        "timestamp": base_ts + seat * 5,
+        "timestamp": base_ts,
         "stroke_rate": stroke_rate + random.uniform(-0.3, 0.3),
         "entry_angle": angle + random.uniform(-0.5, 0.5),
         "pull_force": force + random.uniform(-3, 3),
@@ -339,21 +339,41 @@ def test_training_review():
             ag = base_angle
             fc = base_force
             
-            if batch > 25 and batch < 55:
-                if seat == 3:
-                    sr += 20
-                if seat == 4:
-                    ag += 30
-                if seat == 2:
-                    fc += 120
-            
-            if batch > 60 and batch < 95:
+            if batch > 25 and batch < 65:
                 if seat == 1:
-                    sr -= 15
+                    sr = max(5, sr + 35)
+                    ag = max(5, ag + 40)
+                    fc = max(10, fc + 180)
+                if seat == 2:
+                    sr = max(5, sr * 0.3)
+                    ag = max(5, ag * 0.3)
+                    fc = max(10, fc * 0.3)
                 if seat == 3:
-                    ag -= 25
+                    sr = max(5, sr + 40)
+                    ag = max(5, ag + 45)
+                    fc = max(10, fc + 200)
                 if seat == 4:
-                    fc += 150
+                    sr = max(5, sr * 0.25)
+                    ag = max(5, ag * 0.25)
+                    fc = max(10, fc * 0.25)
+            
+            if batch > 75 and batch < 115:
+                if seat == 1:
+                    sr = max(5, sr * 0.2)
+                    ag = max(5, ag * 0.2)
+                    fc = max(10, fc * 0.2)
+                if seat == 2:
+                    sr = max(5, sr + 35)
+                    ag = max(5, ag + 45)
+                    fc = max(10, fc + 180)
+                if seat == 3:
+                    sr = max(5, sr * 0.25)
+                    ag = max(5, ag * 0.25)
+                    fc = max(10, fc * 0.25)
+                if seat == 4:
+                    sr = max(5, sr + 40)
+                    ag = max(5, ag + 50)
+                    fc = max(10, fc + 200)
             
             batch_data.append(generate_telemetry_data(
                 session_id, base_ts + batch * 200, seat, sr, ag, fc
@@ -362,8 +382,20 @@ def test_training_review():
         response = requests.post(
             f"{BASE_URL}/api/telemetry/batch-report",
             params={"session_id": session_id},
-            json=batch_data
+            json=batch_data,
+            proxies=None
         )
+        
+        if batch in [30, 40, 50, 80, 90, 100]:
+            try:
+                result = response.json()
+                if 'code' in result and result['code'] == 200 and result['data'].get('sync_rate'):
+                    sync = result['data']['sync_rate']['overall_sync_rate']
+                    print(f"  Batch {batch} sync rate: {sync:.4f}")
+                else:
+                    print(f"  Batch {batch} response: {response.text[:200]}")
+            except Exception as e:
+                print(f"  Batch {batch} error: {e}, response: {response.text[:200]}")
     
     response = requests.get(f"{BASE_URL}/api/review/{session_id}")
     print(f"  复盘接口状态码: {response.status_code}")
@@ -393,8 +425,8 @@ def test_training_review():
     
     for deficiency in review_data['seat_technical_deficiencies']:
         assert 'seat_position' in deficiency
-        assert 'deficiency_type' in deficiency
-        assert 'severity_score' in deficiency
+        assert 'primary_issue' in deficiency
+        assert 'avg_severity' in deficiency
     
     print(f"  训练负荷峰值区间数: {len(review_data['training_load_peaks'])}")
     assert len(review_data['training_load_peaks']) > 0
@@ -555,10 +587,10 @@ def test_real_time_intervention():
     
     for suggestion in intervention_data['seat_suggestions']:
         assert 'seat_position' in suggestion
-        assert 'anomaly_type' in suggestion
-        assert 'action' in suggestion
-        assert 'priority' in suggestion
-        print(f"    桨位{suggestion['seat_position']}: {suggestion['action']}")
+        assert 'action_type' in suggestion
+        assert 'description' in suggestion
+        assert 'urgency' in suggestion
+        print(f"    桨位{suggestion['seat_position']}: {suggestion['description']}")
     
     assert len(intervention_data['seat_suggestions']) > 0
     

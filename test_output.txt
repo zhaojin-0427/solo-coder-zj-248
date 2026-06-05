@@ -1,0 +1,38 @@
+启动服务器...
+服务器已启动
+
+============================================================
+  1. 健康检查
+============================================================
+状态码: 200
+服务状态: healthy
+✓ 健康检查通过
+
+============================================================
+  2. 多会话隔离测试
+============================================================
+  创建会话 1: bb06d053-42a5-492c-bc85-284c215c6b9e
+  创建会话 2: 6858727b-8e2b-48cf-81f9-462120597204
+  创建会话 3: 2fdd03ba-1d70-4717-8c93-d0e4332cf6e4
+
+✗ 测试失败: 
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 550, in run_all_tests
+    session_ids = test_multi_session_isolation()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 88, in test_multi_session_isolation
+    assert len(result['data']) >= 3
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+停止服务器...
+服务器已停止
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 571, in <module>
+    run_all_tests()
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 550, in run_all_tests
+    session_ids = test_multi_session_isolation()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 88, in test_multi_session_isolation
+    assert len(result['data']) >= 3
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

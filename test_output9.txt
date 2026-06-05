@@ -1,0 +1,66 @@
+启动服务器...
+  已终止进程 29310 占用端口 9801
+  已终止进程 31194 占用端口 9801
+服务器已启动
+等待服务器就绪...
+服务器在第 1 次尝试时就绪
+
+============================================================
+  1. 健康检查
+============================================================
+状态码: 200
+服务状态: healthy
+✓ 健康检查通过
+
+============================================================
+  2. 多会话隔离测试
+============================================================
+  创建会话 1: 155f0a29-d40a-4c42-85c4-6b3a83d3b17b
+  创建会话 2: 5280d636-55dd-475a-9127-9fc0d7c47ab1
+  创建会话 3: 1e44fefc-ef37-4bc4-a415-2377260b7489
+  会话列表包含 3 个会话
+  会话 1 数据隔离验证通过，平均力量: 139.5N
+  会话 2 数据隔离验证通过，平均力量: 148.6N
+  会话 3 数据隔离验证通过，平均力量: 160.0N
+✓ 多会话隔离测试通过
+
+============================================================
+  3. 教练策略配置与生效测试
+============================================================
+  创建策略: fc292824-a917-43a6-943c-f8d3bdec6d81
+  策略列表查询通过
+  策略更新通过
+  策略 fc292824-a917-43a6-943c-f8d3bdec6d81 应用到会话 f14a0213-9963-4c7c-ad50-b626e4f051aa
+  检测到异常类型: {'entry_angle_deviation', 'stroke_rate_mismatch', 'force_imbalance'}
+  策略生效：所有预期异常均被检测到
+✓ 教练策略配置与生效测试通过
+
+============================================================
+  4. 训练复盘接口测试
+============================================================
+  创建复盘会话: 307f5964-ccc7-4264-8799-f286674bb91d
+  严格策略已应用到复盘会话
+  复盘接口状态码: 200
+  复盘接口响应: {"code":500,"message":"生成复盘报告失败: name 'seat_anomaly_type' is not defined","data":null}
+
+✗ 测试失败: 复盘接口返回错误: {'code': 500, 'message': "生成复盘报告失败: name 'seat_anomaly_type' is not defined", 'data': None}
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 631, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 363, in test_training_review
+    assert result['code'] == 200, f"复盘接口返回错误: {result}"
+           ^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 复盘接口返回错误: {'code': 500, 'message': "生成复盘报告失败: name 'seat_anomaly_type' is not defined", 'data': None}
+停止服务器...
+服务器已停止
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 650, in <module>
+    run_all_tests()
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 631, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 363, in test_training_review
+    assert result['code'] == 200, f"复盘接口返回错误: {result}"
+           ^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 复盘接口返回错误: {'code': 500, 'message': "生成复盘报告失败: name 'seat_anomaly_type' is not defined", 'data': None}

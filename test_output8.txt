@@ -1,0 +1,64 @@
+启动服务器...
+  已终止进程 28689 占用端口 9801
+  已终止进程 62936 占用端口 9801
+服务器已启动
+等待服务器就绪...
+服务器在第 1 次尝试时就绪
+
+============================================================
+  1. 健康检查
+============================================================
+状态码: 200
+服务状态: healthy
+✓ 健康检查通过
+
+============================================================
+  2. 多会话隔离测试
+============================================================
+  创建会话 1: 4b028cf8-e48e-4839-9e36-af4d6f4e9884
+  创建会话 2: 4e1e68e5-8b74-4a19-b4f1-385549e3499e
+  创建会话 3: bb9f21c4-717f-4c24-94d3-90a4c3340089
+  会话列表包含 3 个会话
+  会话 1 数据隔离验证通过，平均力量: 139.4N
+  会话 2 数据隔离验证通过，平均力量: 149.6N
+  会话 3 数据隔离验证通过，平均力量: 159.7N
+✓ 多会话隔离测试通过
+
+============================================================
+  3. 教练策略配置与生效测试
+============================================================
+  创建策略: 3c33b20f-652e-470b-982b-4005769f9c8c
+  策略列表查询通过
+  策略更新通过
+  策略 3c33b20f-652e-470b-982b-4005769f9c8c 应用到会话 62e7ba1d-ace4-465a-bf07-6a3df3c309ab
+  检测到异常类型: {'entry_angle_deviation', 'stroke_rate_mismatch', 'force_imbalance'}
+  策略生效：所有预期异常均被检测到
+✓ 教练策略配置与生效测试通过
+
+============================================================
+  4. 训练复盘接口测试
+============================================================
+  创建复盘会话: 2e138477-636c-442a-85e2-e1601a651fe9
+  严格策略已应用到复盘会话
+
+✗ 测试失败: 
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 629, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 361, in test_training_review
+    assert result['code'] == 200
+           ^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+停止服务器...
+服务器已停止
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 648, in <module>
+    run_all_tests()
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 629, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 361, in test_training_review
+    assert result['code'] == 200
+           ^^^^^^^^^^^^^^^^^^^^^
+AssertionError

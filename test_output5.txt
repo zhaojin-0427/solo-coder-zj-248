@@ -1,0 +1,64 @@
+启动服务器...
+服务器已启动
+等待服务器就绪...
+服务器在第 6 次尝试时就绪
+
+============================================================
+  1. 健康检查
+============================================================
+状态码: 200
+服务状态: healthy
+✓ 健康检查通过
+
+============================================================
+  2. 多会话隔离测试
+============================================================
+  创建会话 1: 258590d4-9f9e-4c8d-88d6-6231baf1a48b
+  创建会话 2: c9eeed85-a276-4bd6-a44f-04605133bcdb
+  创建会话 3: 6c6c38ff-f442-49f8-88c7-2e2d1d899bcc
+  会话列表包含 3 个会话
+  会话 1 数据隔离验证通过，平均力量: 138.7N
+  会话 2 数据隔离验证通过，平均力量: 150.0N
+  会话 3 数据隔离验证通过，平均力量: 160.4N
+✓ 多会话隔离测试通过
+
+============================================================
+  3. 教练策略配置与生效测试
+============================================================
+  创建策略: eb5696f7-09c8-4c68-9dbb-ccf862fed441
+  策略列表查询通过
+  策略更新通过
+  策略 eb5696f7-09c8-4c68-9dbb-ccf862fed441 应用到会话 fe026e9f-aa11-4349-9ed7-2fcde020eb6a
+  检测到异常类型: {'stroke_rate_mismatch', 'force_imbalance', 'entry_angle_deviation'}
+  策略生效：所有预期异常均被检测到
+✓ 教练策略配置与生效测试通过
+
+============================================================
+  4. 训练复盘接口测试
+============================================================
+  创建复盘会话: 31431e14-e4db-470a-b42e-c52c3e874569
+  分阶段同步率曲线点数: 100
+  异常持续时间统计类型数: 0
+  关键失步片段数: 0
+
+✗ 测试失败: 
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 565, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 314, in test_training_review
+    assert len(review_data['key_desync_segments']) > 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+停止服务器...
+服务器已停止
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 584, in <module>
+    run_all_tests()
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 565, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 314, in test_training_review
+    assert len(review_data['key_desync_segments']) > 0
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

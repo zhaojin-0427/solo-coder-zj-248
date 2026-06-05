@@ -1,0 +1,49 @@
+启动服务器...
+服务器已启动
+
+============================================================
+  1. 健康检查
+============================================================
+状态码: 200
+服务状态: healthy
+✓ 健康检查通过
+
+============================================================
+  2. 多会话隔离测试
+============================================================
+  创建会话 1: 56401e30-84c1-47bf-a23d-e8c77dd3e623
+  创建会话 2: b86b6075-8a3a-45b8-a678-4d9cf3fdb597
+  创建会话 3: c215db77-f561-4821-96b3-c92fd2c59415
+  会话列表包含 3 个会话
+  会话 1 数据隔离验证通过，平均力量: 139.7N
+  会话 2 数据隔离验证通过，平均力量: 148.7N
+  会话 3 数据隔离验证通过，平均力量: 161.0N
+✓ 多会话隔离测试通过
+
+============================================================
+  3. 教练策略配置与生效测试
+============================================================
+  创建策略: 0752aced-50a8-4e07-ab28-7f8ef6a7c4fa
+  策略列表查询通过
+
+✗ 测试失败: 'stroke_rate_target_min'
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 552, in run_all_tests
+    strategy_session_id, strategy_id = test_strategy_config_and_effectiveness()
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 172, in test_strategy_config_and_effectiveness
+    assert result['data']['stroke_rate_target_min'] == 29.0
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'stroke_rate_target_min'
+停止服务器...
+服务器已停止
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 572, in <module>
+    run_all_tests()
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 552, in run_all_tests
+    strategy_session_id, strategy_id = test_strategy_config_and_effectiveness()
+                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 172, in test_strategy_config_and_effectiveness
+    assert result['data']['stroke_rate_target_min'] == 29.0
+           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyError: 'stroke_rate_target_min'

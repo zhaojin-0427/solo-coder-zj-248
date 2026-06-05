@@ -1,0 +1,59 @@
+启动服务器...
+服务器已启动
+
+============================================================
+  1. 健康检查
+============================================================
+状态码: 200
+服务状态: healthy
+✓ 健康检查通过
+
+============================================================
+  2. 多会话隔离测试
+============================================================
+  创建会话 1: 471f1091-0169-41c7-8e13-e737b1e893f3
+  创建会话 2: dcefc454-d39a-4a11-acde-392be9200bd2
+  创建会话 3: 1e894b45-af36-454a-9dec-2964301ad8e1
+  会话列表包含 3 个会话
+  会话 1 数据隔离验证通过，平均力量: 140.3N
+  会话 2 数据隔离验证通过，平均力量: 150.0N
+  会话 3 数据隔离验证通过，平均力量: 159.7N
+✓ 多会话隔离测试通过
+
+============================================================
+  3. 教练策略配置与生效测试
+============================================================
+  创建策略: a42bb195-506d-4374-978f-e2fb980810fc
+  策略列表查询通过
+  策略更新通过
+  策略 a42bb195-506d-4374-978f-e2fb980810fc 应用到会话 44ffaa51-979d-4e8b-a0cf-1b0fed0d6ad0
+  检测到异常类型: {'entry_angle_deviation', 'stroke_rate_mismatch', 'force_imbalance'}
+  策略生效：所有预期异常均被检测到
+✓ 教练策略配置与生效测试通过
+
+============================================================
+  4. 训练复盘接口测试
+============================================================
+  创建复盘会话: 22eaabfe-a171-46db-85c7-f4573c5a5ee9
+
+✗ 测试失败: 复盘结果缺少字段: session_name
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 553, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 294, in test_training_review
+    assert field in review_data, f"复盘结果缺少字段: {field}"
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: 复盘结果缺少字段: session_name
+停止服务器...
+服务器已停止
+Traceback (most recent call last):
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 572, in <module>
+    run_all_tests()
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 553, in run_all_tests
+    review_session_id = test_training_review()
+                        ^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/zhaojin/Downloads/AI/0605/248/test_session_features.py", line 294, in test_training_review
+    assert field in review_data, f"复盘结果缺少字段: {field}"
+           ^^^^^^^^^^^^^^^^^^^^
+AssertionError: 复盘结果缺少字段: session_name

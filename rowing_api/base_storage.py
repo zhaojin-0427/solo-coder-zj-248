@@ -5,31 +5,30 @@ from collections import deque
 import numpy as np
 
 from .config import Config
-from .models import TelemetryData, AlignedDataPoint, AnomalyType, AnomalyRecord
+from .models import (
+    TelemetryData, AlignedDataPoint, AnomalyType, AnomalyRecord,
+    SyncRateResult
+)
 
 
-class DataStore:
-    _instance = None
-    _lock = threading.Lock()
+class BaseDataStore:
+    def __init__(self):
+        self._lock = threading.Lock()
+        self._initialize_base()
 
-    def __new__(cls):
-        if cls._instance is None:
-            with cls._lock:
-                if cls._instance is None:
-                    cls._instance = super().__new__(cls)
-                    cls._instance._initialize()
-        return cls._instance
-
-    def _initialize(self):
+    def _initialize_base(self):
         self._raw_data: Dict[int, deque] = {}
         self._aligned_data: deque = deque(maxlen=Config.MAX_HISTORY_SIZE)
         self._device_last_seen: Dict[str, int] = {}
         self._seat_device_map: Dict[int, str] = {}
         self._device_seat_map: Dict[str, int] = {}
         self._anomaly_history: List[AnomalyRecord] = []
-        self._sync_rate_history: List = []
+        self._sync_rate_history: List[SyncRateResult] = []
         self._alignment_buffer: Dict[int, List[TelemetryData]] = {}
         self._last_alignment_time: int = 0
+
+    def _get_offline_threshold_ms(self) -> int:
+        return Config.DEVICE_OFFLINE_THRESHOLD_MS
 
     def add_telemetry(self, data: TelemetryData) -> None:
         with self._lock:
@@ -48,7 +47,6 @@ class DataStore:
 
     def trigger_alignment(self) -> None:
         with self._lock:
-            current_time = int(time.time() * 1000)
             min_seats_for_alignment = 2
             seats_with_data = sum(
                 1 for buffer in self._alignment_buffer.values() 
@@ -56,8 +54,14 @@ class DataStore:
             )
             
             if seats_with_data >= min_seats_for_alignment:
-                self._perform_alignment(current_time)
-                self._last_alignment_time = current_time
+                all_timestamps = []
+                for buffer in self._alignment_buffer.values():
+                    for p in buffer:
+                        all_timestamps.append(p.timestamp)
+                
+                if all_timestamps:
+                    target_time = max(all_timestamps)
+                    self._perform_alignment(target_time)
 
     def _perform_alignment(self, target_time: int) -> None:
         window_start = target_time - Config.ALIGNMENT_WINDOW_MS * 5
@@ -72,6 +76,7 @@ class DataStore:
                 seat_points[seat] = closest
 
         if len(seat_points) >= 2:
+            aligned_points = []
             for seat, data in seat_points.items():
                 aligned_point = AlignedDataPoint(
                     timestamp=target_time,
@@ -82,13 +87,19 @@ class DataStore:
                     pull_force=data.pull_force,
                     hull_acceleration=data.hull_acceleration
                 )
+                aligned_points.append(aligned_point)
                 self._aligned_data.append(aligned_point)
+            
+            self._on_alignment_complete(aligned_points, window_end)
 
             for seat in self._alignment_buffer:
                 self._alignment_buffer[seat] = [
                     p for p in self._alignment_buffer[seat]
                     if p.timestamp > window_end
                 ]
+
+    def _on_alignment_complete(self, aligned_points: List[AlignedDataPoint], window_end: int) -> None:
+        pass
 
     def get_aligned_data(self, start_time: Optional[int] = None, 
                          end_time: Optional[int] = None,
@@ -120,20 +131,22 @@ class DataStore:
     def get_active_seats(self) -> List[int]:
         with self._lock:
             current_time = int(time.time() * 1000)
+            offline_threshold = self._get_offline_threshold_ms()
             active = []
             for seat, device_id in self._seat_device_map.items():
                 last_seen = self._device_last_seen.get(device_id, 0)
-                if current_time - last_seen < Config.DEVICE_OFFLINE_THRESHOLD_MS:
+                if current_time - last_seen < offline_threshold:
                     active.append(seat)
             return sorted(active)
 
     def get_offline_devices(self) -> List[Tuple[int, str]]:
         with self._lock:
             current_time = int(time.time() * 1000)
+            offline_threshold = self._get_offline_threshold_ms()
             offline = []
             for seat, device_id in self._seat_device_map.items():
                 last_seen = self._device_last_seen.get(device_id, 0)
-                if current_time - last_seen >= Config.DEVICE_OFFLINE_THRESHOLD_MS:
+                if current_time - last_seen >= offline_threshold:
                     offline.append((seat, device_id))
             return offline
 
@@ -175,10 +188,11 @@ class DataStore:
     def get_device_info(self) -> Dict[int, Dict]:
         with self._lock:
             current_time = int(time.time() * 1000)
+            offline_threshold = self._get_offline_threshold_ms()
             result = {}
             for seat, device_id in self._seat_device_map.items():
                 last_seen = self._device_last_seen.get(device_id, 0)
-                is_online = current_time - last_seen < Config.DEVICE_OFFLINE_THRESHOLD_MS
+                is_online = current_time - last_seen < offline_threshold
                 result[seat] = {
                     "device_id": device_id,
                     "last_seen": last_seen,
@@ -190,6 +204,10 @@ class DataStore:
     def add_anomaly(self, anomaly: AnomalyRecord) -> None:
         with self._lock:
             self._anomaly_history.append(anomaly)
+            self._on_anomaly_added(anomaly)
+
+    def _on_anomaly_added(self, anomaly: AnomalyRecord) -> None:
+        pass
 
     def get_anomalies(self, start_time: Optional[int] = None,
                      anomaly_types: Optional[List[AnomalyType]] = None,
@@ -202,20 +220,20 @@ class DataStore:
                 result = [a for a in result if a.anomaly_type in anomaly_types]
             return result[-limit:]
 
-    def add_sync_rate(self, sync_rate) -> None:
+    def add_sync_rate(self, sync_rate: SyncRateResult) -> None:
         with self._lock:
             self._sync_rate_history.append(sync_rate)
             if len(self._sync_rate_history) > 1000:
                 self._sync_rate_history = self._sync_rate_history[-1000:]
 
     def get_sync_rate_history(self, start_time: Optional[int] = None,
-                             limit: int = 100) -> List:
+                             limit: int = 100) -> List[SyncRateResult]:
         with self._lock:
             result = list(self._sync_rate_history)
             if start_time:
                 result = [s for s in result if s.timestamp >= start_time]
             return result[-limit:]
 
-    def clear_all(self) -> None:
+    def clear_base(self) -> None:
         with self._lock:
-            self._initialize()
+            self._initialize_base()
